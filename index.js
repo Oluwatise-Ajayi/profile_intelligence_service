@@ -152,7 +152,10 @@ app.get('/api/profiles', async (req, res) => {
 
 app.delete('/api/profiles/:id', async (req, res) => {
     try {
-        await dbRun('DELETE FROM profiles WHERE id = ?', [req.params.id]);
+        const result = await dbRun('DELETE FROM profiles WHERE id = ?', [req.params.id]);
+        if (result.changes === 0) {
+            return res.status(404).json({ status: 'error', message: 'Profile not found' });
+        }
         res.status(204).send();
     } catch(err) {
         res.status(500).json({ status: 'error', message: 'Upstream or server failure' });
