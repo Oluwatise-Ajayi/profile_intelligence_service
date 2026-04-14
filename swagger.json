@@ -1,0 +1,135 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Profile Intelligence Service API",
+    "version": "1.0.0",
+    "description": "API to enrich profile names with external API intelligence (Genderize, Agify, Nationalize)"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Local server"
+    }
+  ],
+  "paths": {
+    "/api/profiles": {
+      "post": {
+        "summary": "Create or retrieve a profile",
+        "description": "Enriches a name using external APIs and stores it.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "ella"
+                  }
+                },
+                "required": ["name"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Profile successfully created"
+          },
+          "200": {
+            "description": "Profile already exists"
+          },
+          "400": {
+            "description": "Missing or empty name"
+          },
+          "422": {
+            "description": "Invalid type"
+          },
+          "500": {
+            "description": "Upstream or server failure"
+          },
+          "502": {
+            "description": "External API returned an invalid response"
+          }
+        }
+      },
+      "get": {
+        "summary": "List all profiles",
+        "description": "Retrieve multiple profiles with optional filtering",
+        "parameters": [
+          {
+            "name": "gender",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "country_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "age_group",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of profiles"
+          }
+        }
+      }
+    },
+    "/api/profiles/{id}": {
+      "get": {
+        "summary": "Retrieve a profile by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Profile found"
+          },
+          "404": {
+            "description": "Profile not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a profile by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Profile deleted"
+          }
+        }
+      }
+    }
+  }
+}
