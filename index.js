@@ -1,9 +1,10 @@
-const express = require('express');
-const cors = require('cors');
-const { v7: uuidv7 } = require('uuid');
-const { dbRun, dbGet, dbAll } = require('./db');
-const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require('./swagger.json');
+import express from 'express';
+import cors from 'cors';
+import { v7 as uuidv7 } from 'uuid';
+import { dbRun, dbGet, dbAll } from './db.js';
+import swaggerUi from 'swagger-ui-express';
+import fs from 'fs';
+const swaggerDocument = JSON.parse(fs.readFileSync(new URL('./swagger.json', import.meta.url)));
 
 const app = express();
 app.use(cors({ origin: '*' }));
