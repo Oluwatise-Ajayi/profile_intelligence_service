@@ -11,10 +11,14 @@ app.use(cors({ origin: '*' }));
 app.use(express.json());
 
 // Setup Swagger UI with Vercel/Serverless CDN support for static assets
-const CSS_URL = "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css";
+const CSS_URL = "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.3.0/swagger-ui.min.css";
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, {
     customCss: '.swagger-ui .opblock .opblock-summary-path-description-wrapper { align-items: center !important; display: flex; flex-wrap: wrap; gap: 0 10px; padding: 0 10px; width: 100%; }',
     customCssUrl: CSS_URL,
+    customJs: [
+        'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.3.0/swagger-ui-bundle.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.3.0/swagger-ui-standalone-preset.js'
+    ],
 }));
 
 
