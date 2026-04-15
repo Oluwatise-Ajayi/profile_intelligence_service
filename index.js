@@ -10,6 +10,10 @@ const app = express();
 app.use(cors({ origin: '*' }));
 app.use(express.json());
 
+// Health check endpoints for external bots verifying if service is running
+app.get('/', (req, res) => res.status(200).json({ status: 'success', message: 'API is running' }));
+app.get('/api', (req, res) => res.status(200).json({ status: 'success', message: 'API is running' }));
+
 // Setup Swagger UI with Vercel/Serverless CDN support for static assets
 const CSS_URL = "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.3.0/swagger-ui.min.css";
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, {

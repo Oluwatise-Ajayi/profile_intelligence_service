@@ -2,11 +2,27 @@ import sqlite3Pkg from 'sqlite3';
 const sqlite3 = sqlite3Pkg.verbose();
 import path from 'path';
 import { fileURLToPath } from 'url';
+import fs from 'fs';
+import os from 'os';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const dbPath = path.resolve(__dirname, 'profiles.db');
+let dbPath = path.resolve(__dirname, 'profiles.db');
+
+// Vercel serverless environment has a read-only filesystem except for /tmp
+if (process.env.VERCEL === '1') {
+    const tmpDbPath = path.join(os.tmpdir(), 'profiles.db');
+    if (!fs.existsSync(tmpDbPath) && fs.existsSync(dbPath)) {
+        try {
+            fs.copyFileSync(dbPath, tmpDbPath);
+        } catch (e) {
+            console.error('Error copying db to tmp:', e);
+        }
+    }
+    dbPath = tmpDbPath;
+}
+
 const db = new sqlite3.Database(dbPath, (err) => {
     if (err) {
         console.error('Error opening database', err.message);
